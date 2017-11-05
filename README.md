@@ -5,6 +5,13 @@
 mount -o remount,rw /dev/root
 ```
 
+## VirtualBox Shared folder
+
+When sharing a folder between Mac and a Ubuntu on VirtualBox, the filesystem is in read-only, fix it with:
+```
+sudo usermod -a -G vboxsf USER
+```
+
 ## Build Root
 
 clone build root
@@ -17,11 +24,19 @@ apt-get -y install build-essential git libncurses5-dev qt5-default qttools5-dev-
 
 Build it
 ```
+cd /recalbox/
 make list-defconfigs
 make raspberrypi3_defconfig
 ```
 
 ## Build a custom EmulationStation
+
+Install dependencies based on the DockerFile:
+```
+apt-get update -y
+apt-get install -y libsdl2-dev libsdl2-mixer-dev libboost-all-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake
+```
+
 
 In the build root, replace the output/build emulation-station folder by your updated sources (does not support symlink)
 
@@ -29,6 +44,8 @@ In the build root, replace the output/build emulation-station folder by your upd
 cd /recalbox/output/build/
 rm -rf recalbox-emulationstation2-c4c4ad6e416a285400f6a2016b40f65224e4ceae
 cp -R /path-to-your-custom/recalbox-emulationstation/ recalbox-emulationstation2-c4c4ad6e416a285400f6a2016b40f65224e4ceae
+touch recalbox-emulationstation2-c4c4ad6e416a285400f6a2016b40f65224e4ceae/.stamp_downloaded
+touch recalbox-emulationstation2-c4c4ad6e416a285400f6a2016b40f65224e4ceae/.stamp_extracted
 cd /recalbox/
-make recalbox-emulationstation2-build
+make recalbox-emulationstation2
 ```
